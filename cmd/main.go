@@ -43,4 +43,20 @@ func main() {
 		fmt.Printf("Created %s\n", outputFileName)
 	}
 
+	cmd := exec.Command(
+		"ffmpeg",
+		"-f", "dash",
+		"-i", fmt.Sprintf("%s/output_%%v.mp4", outputDirectory),
+		"-map", "0",
+		"-f", "dash",
+		fmt.Sprintf("%s/manifest.mpd", outputDirectory),
+	)
+
+	if err := cmd.Run(); err != nil {
+		fmt.Println("Error while generating DASH manifest:", err)
+		return
+	}
+
+	fmt.Println("DASH manifest has been created successfully")
+
 }
